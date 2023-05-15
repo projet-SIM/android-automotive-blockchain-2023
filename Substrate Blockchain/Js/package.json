@@ -1,0 +1,19 @@
+{
+    "name": "xcm_test",
+    "version": "1.0.0",
+    "description": "",
+    "main": "send_xcm.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "type": "module",
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@polkadot/api": "^9.13.0",
+        "@polkadot/keyring": "^10.3.1",
+        "@types/crypto-js": "^4.1.1",
+        "crypto-js": "^4.1.1",
+        "moment": "^2.29.4"
+    }
+}

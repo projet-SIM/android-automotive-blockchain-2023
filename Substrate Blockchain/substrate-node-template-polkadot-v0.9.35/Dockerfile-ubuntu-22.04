@@ -1,0 +1,7 @@
+# docker build -f Dockerfile-ubuntu-22.04 -t projetsim/sim-node-test .
+
+FROM ubuntu:22.04
+
+COPY ./node-template /
+
+RUN /node-template --help

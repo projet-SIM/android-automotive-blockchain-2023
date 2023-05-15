@@ -1,0 +1,179 @@
+syntax = "proto3";
+
+message VehicleData {
+    message CategoryOneFields {
+        int32 ENV_OUTSIDE_TEMPERATURE = 1;
+        int32 ENGINE_RPM = 2;
+        int32 FUEL_LEVEL = 3;
+    }
+    message CategoryTwoField {
+        int64 timestamp = 1;
+        int32 value = 2;
+    }
+    message CategoryOne {
+        // Category One fields
+        //
+        // The first category of sensors is
+        // periodically recorded every seconds (e.g. speed, acceleration,
+        // GPS position). Only the last ten records are sent when an
+        // accident occurs.
+        int64 timestamp = 1;
+        CategoryOneFields fields = 2;
+    }
+    message CategoryTwo {
+        // Category Two fields
+        //
+        // The second category of sensors is recorded
+        // according to the occurrence of events (e.g. we send the last
+        // 10 events of the engine state, associated with its timestamp).
+        // All timestamps are standard UNIX 32-bit numbers.
+        repeated CategoryTwoField IGNITION_STATE = 1;
+        repeated CategoryTwoField HEADLIGHTS_STATE = 2;
+    }
+    // category_one should be a list of size 10
+    repeated CategoryOne category_one = 1;
+    // category_two should be a list of size 10
+    CategoryTwo category_two = 2;
+}
+
+
+message AllFields {
+    // List of all sensors that can be requested by
+    // Android Automotive OS.
+    int32 ABS_ACTIVE = 1;
+    int32 AP_POWER_BOOTUP_REASON = 2;
+    int32 AP_POWER_STATE_REPORT = 3;
+    int32 AP_POWER_STATE_REQ = 4;
+    int32 CABIN_LIGHTS_STATE = 5;
+    int32 CABIN_LIGHTS_SWITCH = 6;
+    int32 CRITICALLY_LOW_TIRE_PRESSURE = 7;
+    int32 CURRENT_GEAR = 8;
+    int32 DISPLAY_BRIGHTNESS = 9;
+    int32 DISTANCE_DISPLAY_UNITS = 10;
+    int32 DOOR_LOCK = 11;
+    int32 DOOR_MOVE = 12;
+    int32 DOOR_POS = 13;
+    int32 ELECTRONIC_TOLL_COLLECTION_CARD_STATUS = 14;
+    int32 ELECTRONIC_TOLL_COLLECTION_CARD_TYPE = 15;
+    int32 ENGINE_COOLANT_TEMP = 16;
+    int32 ENGINE_OIL_LEVEL = 17;
+    int32 ENGINE_OIL_TEMP = 18;
+    int32 ENGINE_RPM = 19;
+    int32 ENV_OUTSIDE_TEMPERATURE = 20;
+    int32 EPOCH_TIME = 21;
+    int32 EV_BATTERY_DISPLAY_UNITS = 22;
+    int32 EV_BATTERY_INSTANTANEOUS_CHARGE_RATE = 23;
+    int32 EV_BATTERY_LEVEL = 24;
+    int32 EV_CHARGE_PORT_CONNECTED = 25;
+    int32 EV_CHARGE_PORT_OPEN = 26;
+    int32 FOG_LIGHTS_STATE = 27;
+    int32 FOG_LIGHTS_SWITCH = 28;
+    int32 FUEL_CONSUMPTION_UNITS_DISTANCE_OVER_VOLUME = 29;
+    int32 FUEL_DOOR_OPEN = 30;
+    int32 FUEL_LEVEL = 31;
+    int32 FUEL_LEVEL_LOW = 32;
+    int32 FUEL_VOLUME_DISPLAY_UNITS = 33;
+    int32 GEAR_SELECTION = 34;
+    int32 HAZARD_LIGHTS_STATE = 35;
+    int32 HAZARD_LIGHTS_SWITCH = 36;
+    int32 HEADLIGHTS_STATE = 37;
+    int32 HEADLIGHTS_SWITCH = 38;
+    int32 HIGH_BEAM_LIGHTS_STATE = 39;
+    int32 HIGH_BEAM_LIGHTS_SWITCH = 40;
+    int32 HVAC_ACTUAL_FAN_SPEED_RPM = 41;
+    int32 HVAC_AC_ON = 42;
+    int32 HVAC_AUTO_ON = 43;
+    int32 HVAC_AUTO_RECIRC_ON = 44;
+    int32 HVAC_DEFROSTER = 45;
+    int32 HVAC_DUAL_ON = 46;
+    int32 HVAC_FAN_DIRECTION = 47;
+    int32 HVAC_FAN_DIRECTION_AVAILABLE = 48;
+    int32 HVAC_FAN_SPEED = 49;
+    int32 HVAC_MAX_AC_ON = 50;
+    int32 HVAC_MAX_DEFROST_ON = 51;
+    int32 HVAC_POWER_ON = 52;
+    int32 HVAC_RECIRC_ON = 53;
+    int32 HVAC_SEAT_TEMPERATURE = 54;
+    int32 HVAC_SEAT_VENTILATION = 55;
+    int32 HVAC_SIDE_MIRROR_HEAT = 56;
+    int32 HVAC_STEERING_WHEEL_HEAT = 57;
+    int32 HVAC_TEMPERATURE_CURRENT = 58;
+    int32 HVAC_TEMPERATURE_DISPLAY_UNITS = 59;
+    int32 HVAC_TEMPERATURE_SET = 60;
+    int32 HVAC_TEMPERATURE_VALUE_SUGGESTION = 61;
+    int32 HW_KEY_INPUT = 62;
+    int32 IGNITION_STATE = 63;
+    int32 INFO_DRIVER_SEAT = 64;
+    int32 INFO_EV_BATTERY_CAPACITY = 65;
+    int32 INFO_EV_CONNECTOR_TYPE = 66;
+    int32 INFO_EV_PORT_LOCATION = 67;
+    int32 INFO_EXTERIOR_DIMENSIONS = 68;
+    int32 INFO_FUEL_CAPACITY = 69;
+    int32 INFO_FUEL_DOOR_LOCATION = 70;
+    int32 INFO_FUEL_TYPE = 71;
+    int32 INFO_MAKE = 72;
+    int32 INFO_MODEL = 73;
+    int32 INFO_MODEL_YEAR = 74;
+    int32 INFO_MULTI_EV_PORT_LOCATIONS = 75;
+    int32 INFO_VIN = 76;
+    int32 INVALID = 77;
+    int32 MIRROR_FOLD = 78;
+    int32 MIRROR_LOCK = 79;
+    int32 MIRROR_Y_MOVE = 80;
+    int32 MIRROR_Y_POS = 81;
+    int32 MIRROR_Z_MOVE = 82;
+    int32 MIRROR_Z_POS = 83;
+    int32 NIGHT_MODE = 84;
+    int32 OBD2_FREEZE_FRAME = 85;
+    int32 OBD2_FREEZE_FRAME_CLEAR = 86;
+    int32 OBD2_FREEZE_FRAME_INFO = 87;
+    int32 OBD2_LIVE_FRAME = 88;
+    int32 PARKING_BRAKE_AUTO_APPLY = 89;
+    int32 PARKING_BRAKE_ON = 90;
+    int32 PERF_ODOMETER = 91;
+    int32 PERF_REAR_STEERING_ANGLE = 92;
+    int32 PERF_STEERING_ANGLE = 93;
+    int32 PERF_VEHICLE_SPEED = 94;
+    int32 PERF_VEHICLE_SPEED_DISPLAY = 95;
+    int32 RANGE_REMAINING = 96;
+    int32 READING_LIGHTS_STATE = 97;
+    int32 READING_LIGHTS_SWITCH = 98;
+    int32 SEAT_BACKREST_ANGLE_1_MOVE = 99;
+    int32 SEAT_BACKREST_ANGLE_1_POS = 100;
+    int32 SEAT_BACKREST_ANGLE_2_MOVE = 101;
+    int32 SEAT_BACKREST_ANGLE_2_POS = 102;
+    int32 SEAT_BELT_BUCKLED = 103;
+    int32 SEAT_BELT_HEIGHT_MOVE = 104;
+    int32 SEAT_BELT_HEIGHT_POS = 105;
+    int32 SEAT_DEPTH_MOVE = 106;
+    int32 SEAT_DEPTH_POS = 107;
+    int32 SEAT_FORE_AFT_MOVE = 108;
+    int32 SEAT_FORE_AFT_POS = 109;
+    int32 SEAT_HEADREST_ANGLE_MOVE = 110;
+    int32 SEAT_HEADREST_ANGLE_POS = 111;
+    int32 SEAT_HEADREST_FORE_AFT_MOVE = 112;
+    int32 SEAT_HEADREST_FORE_AFT_POS = 113;
+    int32 SEAT_HEADREST_HEIGHT_MOVE = 114;
+    int32 SEAT_HEADREST_HEIGHT_POS = 115;
+    int32 SEAT_HEIGHT_MOVE = 116;
+    int32 SEAT_HEIGHT_POS = 117;
+    int32 SEAT_LUMBAR_FORE_AFT_MOVE = 118;
+    int32 SEAT_LUMBAR_FORE_AFT_POS = 119;
+    int32 SEAT_LUMBAR_SIDE_SUPPORT_MOVE = 120;
+    int32 SEAT_LUMBAR_SIDE_SUPPORT_POS = 121;
+    int32 SEAT_MEMORY_SELECT = 122;
+    int32 SEAT_MEMORY_SET = 123;
+    int32 SEAT_OCCUPANCY = 124;
+    int32 SEAT_TILT_MOVE = 125;
+    int32 SEAT_TILT_POS = 126;
+    int32 STORAGE_ENCRYPTION_BINDING_SEED = 127;
+    int32 TIRE_PRESSURE = 128;
+    int32 TIRE_PRESSURE_DISPLAY_UNITS = 129;
+    int32 TRACTION_CONTROL_ACTIVE = 130;
+    int32 TURN_SIGNAL_STATE = 131;
+    int32 VEHICLE_MAP_SERVICE = 132;
+    int32 WHEEL_TICK = 133;
+    int32 WINDOW_LOCK = 134;
+    int32 WINDOW_MOVE = 135;
+    int32 WINDOW_POS = 136;
+}

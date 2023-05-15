@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipfs-node
+spec:
+  selector:
+    app: ipfs-node
+  ports:
+    - name: ipfs-api
+      protocol: TCP
+      port: 5001
+      targetPort: 5001
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipfs-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ipfs-node
+  template:
+    metadata:
+      labels:
+        app: ipfs-node
+    spec:
+      initContainers:
+        - name: ipfs-init
+          image: ipfs/go-ipfs:v0.10.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              ipfs init --profile=server
+              ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
+              ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
+              ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+              ipfs bootstrap rm --all
+          volumeMounts:
+            - name: ipfs-data
+              mountPath: /data/ipfs
+        - name: ipfs-init-2
+          image: registry.hub.docker.com/library/golang:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              git clone https://github.com/Kubuxu/go-ipfs-swarm-key-gen
+              cd go-ipfs-swarm-key-gen/
+              go run ipfs-swarm-key-gen/main.go > /data/ipfs/swarm.key
+          volumeMounts:
+            - name: ipfs-data
+              mountPath: /data/ipfs
+        - name: ipfs-init-3
+          image: ipfs/go-ipfs:v0.10.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              NODE_ID=$(ipfs id | grep 'ID' | awk '{print $2}' | tr -d '\",')
+              ipfs bootstrap add "/ip4/127.0.0.1/tcp/4001/ipfs/$NODE_ID"
+          volumeMounts:
+            - name: ipfs-data
+              mountPath: /data/ipfs
+      containers:
+        - name: ipfs-node
+          image: ipfs/go-ipfs:v0.10.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              ipfs daemon --routing=dhtclient
+          volumeMounts:
+            - name: ipfs-data
+              mountPath: /data/ipfs
+          ports:
+            - containerPort: 5001
+              name: ipfs-api
+          readinessProbe:
+            tcpSocket:
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: ipfs-data
+          emptyDir: {}

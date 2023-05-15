@@ -1,0 +1,105 @@
+[package]
+name = "pallet-sim-renault-accident"
+authors = ["Anonymous"]
+description = "Pallet to report an accident at Renault."
+version = "4.0.0-dev"
+license = "Unlicense"
+homepage = "https://univ-cotedazur.eu/sim"
+repository = "https://bitbucket.org/edge-team-leat/sim-multichain-with-polkadot-and-substrate/src/master/"
+edition = "2021"
+
+# [package.metadata.docs.rs]
+# targets = ["x86_64-unknown-linux-gnu"]
+
+# [dependencies]
+# codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
+# scale-info = { version = "2.0.0", default-features = false, features = ["derive"] }
+# # Substrate
+# frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "polkadot-v0.9.24" }
+# frame-support = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+# frame-system = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+# # Substrate
+# sp-io = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+# sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+# sp-std = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+# #others
+# sha2 = { version = "0.10.2", default-features = false }
+
+# pallet-sim-renault = { path = "../sim_renault", default-features = false }
+
+# #xcm related:
+# xcm = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# cumulus-primitives-core = { git = "https://github.com/paritytech/cumulus", default-features = false,  branch = "polkadot-v0.9.24" }
+# cumulus-pallet-xcm = { git = "https://github.com/paritytech/cumulus", default-features = false,  branch = "polkadot-v0.9.24" }
+
+# #for debug:
+# log = {version = "0.4.17", default-features = false}
+
+# #for xcm tests:
+# # xcm-simulator = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # xcm-builder = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # xcm-executor = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # pallet-xcm = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # polkadot-core-primitives = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # polkadot-runtime-parachains = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # polkadot-parachain = { git = "https://github.com/paritytech/polkadot", default-features = false, branch = "release-v0.9.24" }
+# # pallet-balances = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.24" }
+# # TODO: we have getrandom error on compile using xcm tests modules, maybe solution ?
+# # getrandom = { version = "0.2", features = ["js"] }
+
+# [dev-dependencies]
+# serde = { version = "1.0.132" }
+# sp-core = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.24" }
+
+# [features]
+# default = ["std"]
+# runtime-benchmarks = ["frame-benchmarking/runtime-benchmarks"]
+# std = [
+# 	"codec/std",
+# 	"scale-info/std",
+# 	"frame-benchmarking/std",
+# 	"frame-support/std",
+# 	"frame-system/std",
+# 	"sp-io/std",
+# 	"sp-runtime/std",
+# 	"sp-std/std",
+# ]
+# try-runtime = [ "frame-support/try-runtime" ]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+frame-benchmarking = { version = "4.0.0-dev", default-features = false, optional = true, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+frame-support = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+frame-system = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+sha2 = { version = "0.10.2", default-features = false }
+
+pallet-sim-renault = { path = "../sim_renault", default-features = false }
+
+log = {version = "0.4.17", default-features = false}
+
+[dev-dependencies]
+sp-core = { version = "7.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+sp-io = { version = "7.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+sp-std = { version = "5.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+sp-runtime = { version = "7.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.35" }
+
+[features]
+default = ["std"]
+std = [
+	"codec/std",
+	"scale-info/std",
+	"frame-benchmarking/std",
+	"frame-support/std",
+	"frame-system/std",
+	"sp-io/std",
+	"sp-runtime/std",
+	"sp-std/std",
+]
+runtime-benchmarks = ["frame-benchmarking/runtime-benchmarks"]
+try-runtime = ["frame-support/try-runtime"]

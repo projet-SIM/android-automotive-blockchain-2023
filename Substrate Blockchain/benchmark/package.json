@@ -1,0 +1,25 @@
+{
+  "name": "substrate-transaction-js",
+  "version": "1.0.0",
+  "description": "Substrate Client for SIM use case.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luc Gerrits",
+  "license": "ISC",
+  "dependencies": {
+    "@polkadot/api": "^8.12.2",
+    "@polkadot/keyring": "^10.0.2",
+    "@substrate/txwrapper-polkadot": "^1.1.2",
+    "async": "^3.2.0",
+    "axios": "^0.21.1",
+    "got": "^11.8.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.13",
+    "@babel/node": "^7.13.13"
+  }
+}

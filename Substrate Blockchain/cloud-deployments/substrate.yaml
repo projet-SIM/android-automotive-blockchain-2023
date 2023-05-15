@@ -1,0 +1,471 @@
+apiVersion: v1
+kind: List
+
+items:
+
+
+# --------------------------=== POD DEPLOYMENT 0 ===--------------------------
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: node-0
+    namespace: multichain-net
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        name: substrate-0
+    template:
+      metadata:
+        labels:
+          name: substrate-0
+          serviceSelector: substrate-node
+      spec:
+        securityContext:
+          fsGroup: 101
+        containers:
+          - name: substrate-node
+            image: projetsim/sim-node-coins-2023:latest
+            resources:
+              requests:
+                memory: "10Gi"
+                cpu: "4"
+                ephemeral-storage: "1500Mi"
+              limits:
+                memory: "11Gi"
+                cpu: "4"
+                ephemeral-storage: "2Gi"
+            ports:
+              - name: p2p
+                containerPort: 30333
+              - name: websocket
+                containerPort: 9944
+              - name: rpc
+                containerPort: 9933
+              - name: prometheus
+                containerPort: 9615
+            command:
+              - bash
+            args:
+              - -c
+              - |
+                    # Start Alice's node
+                    rm -rf /datas/substrate-0; \\
+                    /node-template \
+                        --base-path /datas/substrate-0 \
+                        --name NodeAlice \
+                        --chain local \
+                        --port 30333 \
+                        --ws-port 9944 \
+                        --rpc-port 9933 \
+                        --alice \
+                        --unsafe-ws-external \
+                        --unsafe-rpc-external \
+                        --rpc-cors=all \
+                        --prometheus-external \
+                        --log info \
+                        --wasm-execution Compiled \
+                        --ws-max-connections 1000 \
+                        --pool-limit 10000 \
+                        --pool-kbytes 125000 \
+                        --validator \
+                        --state-cache-size 2147483648 \
+                        --max-runtime-instances 100
+                    
+            volumeMounts:
+              - name: substrate-data-0
+                mountPath: /datas/substrate-0
+
+        volumes:
+          - name: substrate-data-0
+            persistentVolumeClaim:
+              claimName: substrate-data-0
+
+#---------------------------------=NODES SERVICES 0=---------------------------------------
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: substrate-0
+    namespace: multichain-net
+  spec:
+    type: ClusterIP
+    selector:
+      name: substrate-0
+    ports:
+      - name: "30333"
+        protocol: TCP
+        port: 30333
+        targetPort: 30333
+      - name: "9944"
+        protocol: TCP
+        port: 9944
+        targetPort: 9944
+      - name: "9933"
+        protocol: TCP
+        port: 9933
+        targetPort: 9933
+      - name: "9615"
+        protocol: TCP
+        port: 9615
+        targetPort: 9615
+#---------------------------------=NODES PERSISTANT VOLUME 0=---------------------------------------
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: substrate-0
+    labels:
+      type: local
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 50Gi
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    hostPath:
+      path: "/datas/substrate-0"
+#--------------------------=PERSISTENT VOLUME CLAIM 0=------------------------------
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    labels:
+      app: substrate-data
+    name: substrate-data-0
+    namespace: multichain-net
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+     requests:
+        storage: 45Gi
+
+# --------------------------=== POD DEPLOYMENT 1 ===--------------------------
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: node-1
+    namespace: multichain-net
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        name: substrate-1
+    template:
+      metadata:
+        labels:
+          name: substrate-1
+          serviceSelector: substrate-node
+      spec:
+        securityContext:
+          fsGroup: 101
+        containers:
+          - name: substrate-node
+            image: projetsim/sim-node-coins-2023:latest
+            resources:
+              requests:
+                memory: "10Gi"
+                cpu: "4"
+                ephemeral-storage: "1500Mi"
+              limits:
+                memory: "11Gi"
+                cpu: "4"
+                ephemeral-storage: "2Gi"
+            ports:
+              - name: p2p
+                containerPort: 30333
+              - name: websocket
+                containerPort: 9944
+              - name: rpc
+                containerPort: 9933
+              - name: prometheus
+                containerPort: 9615
+            command:
+              - bash
+            args:
+              - -c
+              - |
+                    rm -rf /datas/substrate-1; \\
+                    /node-template \
+                        --base-path /datas/substrate-1 \
+                        --name NodeBob \
+                        --chain local \
+                        --bob \
+                        --port 30333 \
+                        --ws-port 9944 \
+                        --rpc-port 9933 \
+                        --unsafe-ws-external \
+                        --unsafe-rpc-external \
+                        --rpc-cors=all \
+                        --prometheus-external \
+                        --log info \
+                        --wasm-execution Compiled \
+                        --ws-max-connections 1000 \
+                        --pool-limit 10000 \
+                        --pool-kbytes 125000 \
+                        --max-runtime-instances 100 \
+                        --state-cache-size 2147483648 \
+                        --validator \
+                        --bootnodes /ip4/$SUBSTRATE_0_SERVICE_HOST/tcp/30333/p2p/12D3KooWHzbtQ7c7KHnZ6jre6CeKoRniV836zAsRfHHX4WouaJbW
+                    
+            volumeMounts:
+              - name: substrate-data-1
+                mountPath: /datas/substrate-1
+
+        volumes:
+          - name: substrate-data-1
+            persistentVolumeClaim:
+              claimName: substrate-data-1
+
+#---------------------------------=NODES SERVICES 1=---------------------------------------
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: substrate-1
+    namespace: multichain-net
+  spec:
+    type: ClusterIP
+    selector:
+      name: substrate-1
+    ports:
+      - name: "30333"
+        protocol: TCP
+        port: 30333
+        targetPort: 30333
+      - name: "9944"
+        protocol: TCP
+        port: 9944
+        targetPort: 9944
+      - name: "9933"
+        protocol: TCP
+        port: 9933
+        targetPort: 9933
+      - name: "9615"
+        protocol: TCP
+        port: 9615
+        targetPort: 9615
+#---------------------------------=NODES PERSISTANT VOLUME 1=---------------------------------------
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: substrate-1
+    labels:
+      type: local
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 50Gi
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    hostPath:
+      path: "/datas/substrate-1"
+#--------------------------=PERSISTENT VOLUME CLAIM 1=------------------------------
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    labels:
+      app: substrate-data
+    name: substrate-data-1
+    namespace: multichain-net
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+     requests:
+        storage: 45Gi
+
+# --------------------------=== POD DEPLOYMENT 2 ===--------------------------
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: node-2
+    namespace: multichain-net
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        name: substrate-2
+    template:
+      metadata:
+        labels:
+          name: substrate-2
+          serviceSelector: substrate-node
+      spec:
+        securityContext:
+          fsGroup: 101
+        containers:
+          - name: substrate-node
+            image: projetsim/sim-node-coins-2023:latest
+            resources:
+              requests:
+                memory: "10Gi"
+                cpu: "4"
+                ephemeral-storage: "1500Mi"
+              limits:
+                memory: "11Gi"
+                cpu: "4"
+                ephemeral-storage: "2Gi"
+            ports:
+              - name: p2p
+                containerPort: 30333
+              - name: websocket
+                containerPort: 9944
+              - name: rpc
+                containerPort: 9933
+              - name: prometheus
+                containerPort: 9615
+            command:
+              - bash
+            args:
+              - -c
+              - |
+                    rm -rf /datas/substrate-2; \\
+                    /node-template \
+                        --base-path /datas/substrate-2 \
+                        --name NodeCharlie \
+                        --chain local \
+                        --charlie \
+                        --port 30333 \
+                        --ws-port 9944 \
+                        --rpc-port 9933 \
+                        --unsafe-ws-external \
+                        --unsafe-rpc-external \
+                        --rpc-cors=all \
+                        --prometheus-external \
+                        --log info \
+                        --wasm-execution Compiled \
+                        --ws-max-connections 1000 \
+                        --pool-limit 10000 \
+                        --pool-kbytes 125000 \
+                        --max-runtime-instances 100 \
+                        --state-cache-size 2147483648 \
+                        --validator \
+                        --bootnodes /ip4/$SUBSTRATE_0_SERVICE_HOST/tcp/30333/p2p/12D3KooWHzbtQ7c7KHnZ6jre6CeKoRniV836zAsRfHHX4WouaJbW
+                    
+            volumeMounts:
+              - name: substrate-data-2
+                mountPath: /datas/substrate-2
+
+        volumes:
+          - name: substrate-data-2
+            persistentVolumeClaim:
+              claimName: substrate-data-2
+
+#---------------------------------=NODES SERVICES 2=---------------------------------------
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: substrate-2
+    namespace: multichain-net
+  spec:
+    type: ClusterIP
+    selector:
+      name: substrate-2
+    ports:
+      - name: "30333"
+        protocol: TCP
+        port: 30333
+        targetPort: 30333
+      - name: "9944"
+        protocol: TCP
+        port: 9944
+        targetPort: 9944
+      - name: "9933"
+        protocol: TCP
+        port: 9933
+        targetPort: 9933
+      - name: "9615"
+        protocol: TCP
+        port: 9615
+        targetPort: 9615
+#---------------------------------=NODES PERSISTANT VOLUME 2=---------------------------------------
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: substrate-2
+    labels:
+      type: local
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 50Gi
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    hostPath:
+      path: "/datas/substrate-2"
+#--------------------------=PERSISTENT VOLUME CLAIM 2=------------------------------
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    labels:
+      app: substrate-data
+    name: substrate-data-2
+    namespace: multichain-net
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+     requests:
+        storage: 45Gi
+
+
+#--------------------------=ONE SERVICE FOR ALL NODE (websocket)=--------------------------------
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: substrate-ws-service
+    namespace: multichain-net
+  spec:
+    type: ClusterIP
+    selector:
+      serviceSelector: substrate-node
+    ports:
+      - name: "9944"
+        protocol: TCP
+        port: 9944
+        targetPort: 9944
+####################################### BENCHMARK MACHINE #########################
+
+# - apiVersion: apps/v1
+#   kind: Deployment
+#   metadata:
+#     name: benchmark
+#     namespace: multichain-net
+#   spec:
+#     replicas: 1
+#     selector:
+#         matchLabels:
+#           name: benchmark-deployment
+#     template:
+#       metadata:
+#         labels:
+#           name: benchmark-deployment
+#           serviceSelector: benchmark-deployment
+#       spec:
+#         hostAliases:
+#         - ip: "185.52.32.4"
+#           hostnames:
+#           - "substrate-ws.unice.cust.tasfrance.com"
+#         containers:
+#         - name: substrate-sim-transaction-js
+#           image: projetsim/substrate-sim-transaction-js:latest
+#           command:
+#             - "sleep"
+#             - "604800"
+#           resources:
+#             limits:
+#               cpu: "30"
+#               memory: "10Gi"
+#             requests:
+#               cpu: "30"
+#               memory: "10Gi"
+#           imagePullPolicy: Always
+#         restartPolicy: Always
